@@ -10,6 +10,7 @@
   "skip": "Skip",
   "get_started":"Let's Get Started",
   "already":"Don't have an account?",
+  "About":"About",
   "welcome_title": "Create Account",
   "welcome_subtitle": "Fill your informations bellow or register with social account",
   "welcome_title2": "Sign In",
@@ -123,5 +124,7 @@
   "logout_confirmation": "Logout confirmation",
   "are_you_sure_logout": "Are you sure you want to log out?",
   "cancel": "Cancel",
-  "confirm": "Confirm"
+  "confirm": "Confirm Appointement",
+  "success": "Success",
+"your_appointment_is_confirmed": "Your appointment is confirmed"
 }

@@ -11,6 +11,7 @@
     "modal_title": "تطبيقك المثالي لحجز مواعيد الطبيب",
   "modal_subtitle": "احجز المواعيد بسهولة وادِر رحلتك الصحية",
   "skip": "تخطي",
+  "About": "حول الطبيب",
   "get_started": "لنبدأ",
   "already": "هل لديك حساب بالفعل؟",
     "welcome_title":"انشاء حساب",
@@ -127,7 +128,8 @@
 "logout_confirmation": "تأكيد تسجيل الخروج",
 "are_you_sure_logout": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
 "cancel": "إلغاء",
-"confirm": "تأكيد"
-
+"confirm": "تأكيد الموعد",
+"success": "تم بنجاح",
+"your_appointment_is_confirmed": "تم تأكيد موعدك"
   }
   

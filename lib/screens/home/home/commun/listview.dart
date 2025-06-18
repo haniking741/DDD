@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ListViewImages extends StatelessWidget {
   const ListViewImages({
-    Key? key,
+    super.key,
     required this.titleList,
     required this.imageList,
     required this.onItemTap,
-  }) : super(key: key);
+  });
 
   final List<String> titleList;
   final List<String> imageList;

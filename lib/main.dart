@@ -27,7 +27,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
         ChangeNotifierProvider.value(value: localeProvider),
-         ChangeNotifierProvider(create: (_) => DoctorProvider()),
+        ChangeNotifierProvider(create: (_) => DoctorProvider()),
       ],
       child: const MyApp(),
     ),
@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
-    final currentLocale = localeProvider.locale?.languageCode ?? 'en';
+    final currentLocale = localeProvider.locale.languageCode ?? 'en';
     final isArabic = currentLocale == 'ar';
 
     return ScreenUtilInit(
@@ -62,10 +62,7 @@ class MyApp extends StatelessWidget {
             brightness: Brightness.dark,
           ),
           locale: localeProvider.locale,
-          supportedLocales: const [
-            Locale('en'),
-            Locale('ar'),
-          ],
+          supportedLocales: const [Locale('en'), Locale('ar')],
           localizationsDelegates: const [
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,

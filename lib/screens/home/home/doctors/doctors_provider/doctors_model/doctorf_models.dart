@@ -10,7 +10,8 @@ class Doctor {
   final int reviews;
   final List<int> workingDays;
   final List<String> workingHours;
-  final List<String> offDates;
+  final List<String> offDates; // Use List<DateTime> if needed
+  final String description;
 
   Doctor({
     required this.name,
@@ -25,6 +26,7 @@ class Doctor {
     required this.workingDays,
     required this.workingHours,
     required this.offDates,
+    required this.description,
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
@@ -32,15 +34,40 @@ class Doctor {
       name: json['name'],
       specialty: json['specialty'],
       image: json['image'],
-      lat: double.parse(json['lat']),
-      lng: double.parse(json['lng']),
+      lat:
+          json['lat'] is String
+              ? double.parse(json['lat'])
+              : json['lat'].toDouble(),
+      lng:
+          json['lng'] is String
+              ? double.parse(json['lng'])
+              : json['lng'].toDouble(),
       patients: json['patients'],
       experience: json['experience'],
-      rating: json['rating'],
+      rating: json['rating'].toDouble(),
       reviews: json['reviews'],
       workingDays: List<int>.from(json['workingDays']),
       workingHours: List<String>.from(json['workingHours']),
       offDates: List<String>.from(json['offDates']),
+      description: json['description'],
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'specialty': specialty,
+      'image': image,
+      'lat': lat,
+      'lng': lng,
+      'patients': patients,
+      'experience': experience,
+      'rating': rating,
+      'reviews': reviews,
+      'workingDays': workingDays,
+      'workingHours': workingHours,
+      'offDates': offDates,
+      'description': description,
+    };
   }
 }

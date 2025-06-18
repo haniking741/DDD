@@ -1,5 +1,3 @@
-// ignore_for_file: invalid_use_of_visible_for_testing_member
-
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:dawini/const/colors.dart';
@@ -38,7 +36,9 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
     try {
       await intent.launch();
     } catch (e) {
-      final fallbackUrl = Uri.parse("https://www.google.com/maps/search/?api=1&query=$query");
+      final fallbackUrl = Uri.parse(
+        "https://www.google.com/maps/search/?api=1&query=$query",
+      );
       if (await canLaunchUrl(fallbackUrl)) {
         await launchUrl(fallbackUrl, mode: LaunchMode.externalApplication);
       } else {
@@ -48,10 +48,13 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
       }
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
-    final doctors = context.watch<DoctorProvider>().getDoctorsBySpecialty(widget.category);
+    final doctors = context.watch<DoctorProvider>().getDoctorsBySpecialty(
+      widget.category,
+    );
 
     return SafeArea(
       child: Scaffold(
@@ -97,47 +100,49 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-          child: doctors.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        localeProvider.translate("no_item"),
-                        style: TextStyle(fontSize: 16.sp, color: Colors.grey),
-                      ),
-                      Image.asset(
-                        "assets/images/empty.gif",
-                        width: double.infinity,
-                        height: 200.w,
-                      ),
-                    ],
+          child:
+              doctors.isEmpty
+                  ? Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          localeProvider.translate("no_item"),
+                          style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+                        ),
+                        Image.asset(
+                          "assets/images/empty.gif",
+                          width: double.infinity,
+                          height: 200.w,
+                        ),
+                      ],
+                    ),
+                  )
+                  : ListView.builder(
+                    itemCount: doctors.length,
+                    itemBuilder: (context, index) {
+                      final doctor = doctors[index];
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: 12.h),
+                        child: _buildDoctorCard(
+                          context,
+                          doctor.name,
+                          doctor.specialty,
+                          doctor.image,
+                          doctor.lat,
+                          doctor.lng,
+                          doctor.patients,
+                          doctor.experience,
+                          doctor.rating,
+                          doctor.reviews,
+                          doctor.workingDays,
+                          doctor.workingHours,
+                          doctor.offDates,
+                          doctor.description,
+                        ),
+                      );
+                    },
                   ),
-                )
-              : ListView.builder(
-                  itemCount: doctors.length,
-                  itemBuilder: (context, index) {
-                    final doctor = doctors[index];
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: 12.h),
-                      child: _buildDoctorCard(
-                        context,
-                        doctor.name,
-                        doctor.specialty,
-                        doctor.image,
-                        doctor.lat,
-                        doctor.lng,
-                        doctor.patients,
-                        doctor.experience,
-                        doctor.rating,
-                        doctor.reviews,
-                        doctor.workingDays,
-                        doctor.workingHours,
-                        doctor.offDates,
-                      ),
-                    );
-                  },
-                ),
         ),
       ),
     );
@@ -157,6 +162,7 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
     List<int> workingDays,
     List<String> workingHours,
     List<String> offdates,
+    String description,
   ) {
     final localeProvider = Provider.of<LocaleProvider>(context);
 
@@ -210,17 +216,17 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
                     ),
                     Text(
                       specialty,
-                      style: TextStyle(
-                        fontSize: 13.sp,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 13.sp, color: Colors.grey),
                     ),
                     SizedBox(height: 4.h),
                     Row(
                       children: [
                         Icon(Icons.star, color: Colors.amber, size: 16.r),
                         Text(" $rating "),
-                        Text("($reviews Reviews)", style: TextStyle(color: Colors.grey, fontSize: 12.sp)),
+                        Text(
+                          "($reviews Reviews)",
+                          style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                        ),
                       ],
                     ),
                   ],
@@ -247,6 +253,7 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
                   workingDays: workingDays,
                   workingHours: workingHours,
                   offDates: offdates,
+                  description: description,
                 );
               },
               style: ElevatedButton.styleFrom(

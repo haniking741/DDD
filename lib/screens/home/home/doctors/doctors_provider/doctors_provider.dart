@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dawini/screens/home/home/doctors/doctors_model/doctorf_models.dart';
+import 'package:dawini/screens/home/home/doctors/doctors_provider/doctors_model/doctorf_models.dart';
 
 class DoctorProvider extends ChangeNotifier {
   final List<Doctor> _doctors = [
@@ -16,6 +16,11 @@ class DoctorProvider extends ChangeNotifier {
       workingDays: [1, 2, 3, 4, 6, 7],
       workingHours: ["08:00", "09:00", "10:00", "11:00"],
       offDates: [],
+      description:
+          "Dr. Aissoug Ziad is a dentist with 7 years of experience.\n"
+          "He treats 1800 patients in Khenchela with a 4.8 rating.\n"
+          "Available most days from 08:00 to 11:00.\n"
+          "Known for early morning appointments.",
     ),
     Doctor(
       name: "Dr. Ramdhani Aissa",
@@ -28,9 +33,13 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.6,
       reviews: 97,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["09:00", "10:00", "14:00"],
       offDates: [],
+      description:
+          "Dr. Ramdhani Aissa is a Khenchela-based dentist.\n"
+          "He has 5 years of experience and 1500 patients.\n"
+          "Rated 4.6, he works morning and early afternoons.\n"
+          "Available six days per week.",
     ),
     Doctor(
       name: "Dr. Khaled Messaoud",
@@ -43,9 +52,13 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.9,
       reviews: 164,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["08:00", "10:00", "16:00"],
       offDates: [],
+      description:
+          "Dr. Khaled Messaoud is a neurologist in Algiers.\n"
+          "He has 9 years of experience and a 4.9 rating.\n"
+          "Consults over 2200 patients with great trust.\n"
+          "Available mornings and afternoons.",
     ),
     Doctor(
       name: "Dr. Selma Djouadi",
@@ -58,9 +71,13 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.7,
       reviews: 109,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["09:00", "13:00", "15:00"],
       offDates: [],
+      description:
+          "Dr. Selma Djouadi is a gynecologist in Algiers.\n"
+          "With 6 years of experience, she has a 4.7 rating.\n"
+          "She serves 1700 patients weekly.\n"
+          "Working flexible hours six days a week.",
     ),
     Doctor(
       name: "Dr. Yasmine Bouteldja",
@@ -73,9 +90,13 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.5,
       reviews: 88,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["08:00", "09:00", "11:00", "14:00"],
       offDates: [],
+      description:
+          "Dr. Yasmine Bouteldja is a generalist with 4 years.\n"
+          "She helps 1300 patients in Algiers.\n"
+          "Rated 4.5, she is available from 08:00 to 14:00.\n"
+          "She works almost every day.",
     ),
     Doctor(
       name: "Dr. Mourad Khettab",
@@ -88,9 +109,13 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.8,
       reviews: 132,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["08:30", "09:30", "10:30", "13:30"],
       offDates: [],
+      description:
+          "Dr. Mourad Khettab is a dentist in Algiers.\n"
+          "He has 8 years of experience and a 4.8 rating.\n"
+          "Treats 1950 patients with flexible slots.\n"
+          "Open from 08:30 to early afternoon.",
     ),
   ];
 

@@ -171,8 +171,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 unselectedWidgetColor: TColors.primarycolor,
                 checkboxTheme: CheckboxThemeData(
                   fillColor:
-                      MaterialStateProperty.resolveWith<Color>((states) {
-                    if (states.contains(MaterialState.selected)) {
+                      WidgetStateProperty.resolveWith<Color>((states) {
+                    if (states.contains(WidgetState.selected)) {
                       return TColors.primarycolor;
                     }
                     return Colors.transparent;

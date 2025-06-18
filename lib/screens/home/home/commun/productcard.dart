@@ -13,7 +13,7 @@ class Productcard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new Container(
+    return Container(
       width: double.infinity,
       height: 320.0,
       decoration: BoxDecoration(

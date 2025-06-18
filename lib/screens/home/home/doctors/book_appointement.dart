@@ -5,8 +5,10 @@ import 'package:dawini/services/translation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
 void showBookingAppointmentSheet(
   BuildContext context, {
+  required String description,
   required String doctorName,
   required String doctorImagePath,
   required String specialization,
@@ -26,19 +28,21 @@ void showBookingAppointmentSheet(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     backgroundColor: Colors.white,
-    builder: (_) => BookingAppointmentSheet(
-      doctorName: doctorName,
-      doctorImagePath: doctorImagePath,
-      specialization: specialization,
-      location: location,
-      patients: patients,
-      experience: experience,
-      rating: rating,
-      reviews: reviews,
-      workingDays: workingDays,
-      workingHours: workingHours,
-      offDates: offDates,
-    ),
+    builder:
+        (_) => BookingAppointmentSheet(
+          doctorName: doctorName,
+          doctorImagePath: doctorImagePath,
+          specialization: specialization,
+          location: location,
+          patients: patients,
+          experience: experience,
+          rating: rating,
+          reviews: reviews,
+          workingDays: workingDays,
+          workingHours: workingHours,
+          offDates: offDates,
+          description: description,
+        ),
   );
 }
 
@@ -47,6 +51,7 @@ class BookingAppointmentSheet extends StatefulWidget {
   final String doctorImagePath;
   final String specialization;
   final String location;
+  final String description;
   final int patients;
   final int experience;
   final double rating;
@@ -57,6 +62,7 @@ class BookingAppointmentSheet extends StatefulWidget {
 
   const BookingAppointmentSheet({
     super.key,
+    required this.description,
     required this.doctorName,
     required this.doctorImagePath,
     required this.specialization,
@@ -71,7 +77,8 @@ class BookingAppointmentSheet extends StatefulWidget {
   });
 
   @override
-  _BookingAppointmentSheetState createState() => _BookingAppointmentSheetState();
+  _BookingAppointmentSheetState createState() =>
+      _BookingAppointmentSheetState();
 }
 
 class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
@@ -84,7 +91,6 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
   late final List<DateTime> _disabledDates;
   bool _showTimeSlotError = false;
 
-
   @override
   void initState() {
     super.initState();
@@ -93,10 +99,16 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
     doctorWorkingWeekdays = widget.workingDays;
 
     _disabledDates = widget.offDates.map((e) => DateTime.parse(e)).toList();
-    _availableDates = generateAvailableDates(doctorWorkingWeekdays, _disabledDates);
+    _availableDates = generateAvailableDates(
+      doctorWorkingWeekdays,
+      _disabledDates,
+    );
   }
 
-  List<DateTime> generateAvailableDates(List<int> weekdays, List<DateTime> disabledDates) {
+  List<DateTime> generateAvailableDates(
+    List<int> weekdays,
+    List<DateTime> disabledDates,
+  ) {
     final today = DateTime.now();
     final end = DateTime(today.year, today.month + 2, 0);
 
@@ -144,20 +156,36 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.doctorName,
-                        style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
-                    Text(widget.specialization,
-                        style: TextStyle(fontSize: 14.sp, color: Colors.grey)),
+                    Text(
+                      widget.doctorName,
+                      style: TextStyle(
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      widget.specialization,
+                      style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+                    ),
                     Row(
                       children: [
-                        Icon(Icons.location_on, size: 14.sp, color: Colors.blue),
+                        Icon(
+                          Icons.location_on,
+                          size: 14.sp,
+                          color: Colors.blue,
+                        ),
                         SizedBox(width: 4.w),
                         Expanded(
-                          child: Text(widget.location,
-                              style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
+                          child: Text(
+                            widget.location,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
@@ -178,17 +206,49 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
           SizedBox(height: 20.h),
 
           Center(
-            child: Text(
-              locale.translate("make_appointement"),
-              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold, color: TColors.labeltext),
+            child: Column(
+              children: [
+                Text(
+                  locale.translate("make_appointement"),
+                  style: TextStyle(
+                    fontSize: 18.sp,
+                    fontWeight: FontWeight.bold,
+                    color: TColors.labeltext,
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Column(
+                    children: [
+                      Text(
+                        locale.translate("About"),
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          color: TColors.primarycolor,
+                        ),
+                      ),
+                      Text(
+                        widget.description,
+                        style: TextStyle(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.bold,
+                          color: TColors.labeltext,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
           SizedBox(height: 20.h),
 
           PrimaryButton(
-            text: _selectedDate == null
-                ? locale.translate("choose_date")
-                : BoardDateFormat('yyyy/MM/dd').format(_selectedDate!),
+            text:
+                _selectedDate == null
+                    ? locale.translate("choose_date")
+                    : BoardDateFormat('yyyy/MM/dd').format(_selectedDate!),
             onPressed: () async {
               final firstAvailableDate = _availableDates.first;
 
@@ -208,69 +268,82 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
             },
           ),
 
-         if (_selectedDate != null) ...[
-  SizedBox(height: 20.h),
-  Directionality(
-    textDirection: locale.locale.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          locale.translate("available_times"),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 10.h),
-        Wrap(
-          spacing: 10.w,
-          runSpacing: 10.h,
-          children: _timeSlots.map((slot) {
-            bool isSelected = slot == _selectedTimeSlot;
-            return ChoiceChip(
-              label: Text(slot),
-              selected: isSelected,
-              onSelected: (_) => setState(() => _selectedTimeSlot = slot),
-              selectedColor: TColors.primarycolor.withOpacity(0.4),
-              backgroundColor: Colors.grey.shade200,
-              labelStyle: TextStyle(color: isSelected ? TColors.primarycolor : Colors.black),
-            );
-          }).toList(),
-        ),
-        SizedBox(height: 10.h,),
-        if (_showTimeSlotError)
-  Padding(
-    padding: EdgeInsets.only(top: 8.h),
-    child: Text(
-      locale.translate("please_select_time"),
-      style: TextStyle(color: Colors.red, fontSize: 13.sp),
-    ),
-  ),
-SizedBox(height: 15.h,),
-        if (_selectedTimeSlot != null)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.h),
-            child: Text(
-              "${locale.translate("you_selected")}: ${BoardDateFormat('yyyy/MM/dd').format(_selectedDate!)} - $_selectedTimeSlot",
-              style: TextStyle(fontSize: 14.sp),
+          if (_selectedDate != null) ...[
+            SizedBox(height: 20.h),
+            Directionality(
+              textDirection:
+                  locale.locale.languageCode == 'ar'
+                      ? TextDirection.rtl
+                      : TextDirection.ltr,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    locale.translate("available_times"),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Wrap(
+                    spacing: 10.w,
+                    runSpacing: 10.h,
+                    children:
+                        _timeSlots.map((slot) {
+                          bool isSelected = slot == _selectedTimeSlot;
+                          return ChoiceChip(
+                            label: Text(slot),
+                            selected: isSelected,
+                            onSelected:
+                                (_) => setState(() => _selectedTimeSlot = slot),
+                            selectedColor: TColors.primarycolor.withOpacity(
+                              0.4,
+                            ),
+                            backgroundColor: Colors.grey.shade200,
+                            labelStyle: TextStyle(
+                              color:
+                                  isSelected
+                                      ? TColors.primarycolor
+                                      : Colors.black,
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                  SizedBox(height: 10.h),
+                  if (_showTimeSlotError)
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Text(
+                        locale.translate("please_select_time"),
+                        style: TextStyle(color: Colors.red, fontSize: 13.sp),
+                      ),
+                    ),
+                  SizedBox(height: 15.h),
+                  if (_selectedTimeSlot != null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      child: Text(
+                        "${locale.translate("you_selected")}: ${BoardDateFormat('yyyy/MM/dd').format(_selectedDate!)} - $_selectedTimeSlot",
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ),
+                  PrimaryButton(
+                    text: locale.translate("confirm"),
+                    onPressed: () {
+                      if (_selectedTimeSlot == null) {
+                        setState(() {
+                          _showTimeSlotError = true;
+                        });
+                      } else {
+                        Navigator.of(context).pop();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-      PrimaryButton(
-  text: locale.translate("confirm"),
-  onPressed: () {
-    if (_selectedTimeSlot == null) {
-      setState(() {
-        _showTimeSlotError = true;
-      });
-    } else {
-      Navigator.of(context).pop();
-    }
-  },
-),
-
-      ],
-    ),
-  ),
-]
-
+          ],
         ],
       ),
     );
@@ -281,7 +354,10 @@ SizedBox(height: 15.h,),
       children: [
         Icon(icon, size: 24.sp, color: Colors.blue),
         SizedBox(height: 4.h),
-        Text(value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp)),
+        Text(
+          value,
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.sp),
+        ),
         Text(label, style: TextStyle(fontSize: 12.sp, color: Colors.grey)),
       ],
     );

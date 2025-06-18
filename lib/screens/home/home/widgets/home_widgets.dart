@@ -6,7 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 class HomeWidgets {
-  static Widget buildHeader(TextEditingController searchController, context, FocusNode _searchFocusNode) {
+  static Widget buildHeader(TextEditingController searchController, context, FocusNode searchFocusNode) {
     final localeProvider = Provider.of<LocaleProvider>(context);
     final theme = Theme.of(context);
     return Stack(
@@ -36,7 +36,7 @@ class HomeWidgets {
       ]
     ),
     SizedBox(height: 15.h,),
-    HomeWidgets.buildSearchBar(searchController, _searchFocusNode, context)
+    HomeWidgets.buildSearchBar(searchController, searchFocusNode, context)
   ],
 ),
           ),
