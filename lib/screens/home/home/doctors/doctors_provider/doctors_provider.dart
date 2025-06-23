@@ -28,7 +28,6 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.6,
       reviews: 97,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["09:00", "10:00", "14:00"],
       offDates: [],
     ),
@@ -88,7 +87,6 @@ class DoctorProvider extends ChangeNotifier {
       rating: 4.8,
       reviews: 132,
       workingDays: [1, 2, 3, 4, 6, 7],
-
       workingHours: ["08:30", "09:30", "10:30", "13:30"],
       offDates: [],
     ),
@@ -97,6 +95,5 @@ class DoctorProvider extends ChangeNotifier {
   List<Doctor> getDoctorsBySpecialty(String specialty) {
     return _doctors.where((d) => d.specialty == specialty).toList();
   }
-
   List<Doctor> get allDoctors => _doctors;
 }

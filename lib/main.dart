@@ -1,5 +1,7 @@
 import 'package:dawini/providers/onboarding_provider.dart';
 import 'package:dawini/providers/theme_provider.dart';
+import 'package:dawini/screens/home/booking/booking_provider/booking_provider.dart' show AppointmentProvider;
+import 'package:dawini/screens/home/chat/chat_provider/chat_provider.dart';
 import 'package:dawini/screens/home/home/doctors/doctors_provider/doctors_provider.dart';
 import 'package:dawini/services/translation.dart';
 import 'package:dawini/splash_screen.dart';
@@ -7,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-// ignore: depend_on_referenced_packages
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
@@ -27,7 +28,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => OnboardingProvider()),
         ChangeNotifierProvider.value(value: localeProvider),
-         ChangeNotifierProvider(create: (_) => DoctorProvider()),
+        ChangeNotifierProvider(create: (_) => DoctorProvider()),
+        ChangeNotifierProvider(create: (_) => AppointmentProvider()),
+        ChangeNotifierProvider(create: (_) => ChatProvider()),
       ],
       child: const MyApp(),
     ),

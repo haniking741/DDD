@@ -158,94 +158,96 @@ static Widget buildContainer({
       ),
       child: Padding(
         padding: EdgeInsets.all(16.w),
-        child: Column(
-          children: [
-            // الصف العلوي: صورة + الاسم + التخصص + الاتصال
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleAvatar(
-                  radius: 22.r,
-                  backgroundImage: AssetImage(imagePath),
-                ),
-                SizedBox(width: 16.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        doctorName,
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        specialty,
-                        style: TextStyle(
-                          color: TColors.primarycolor3,
-                          fontSize: 14.sp,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: onCallTap,
-                  child: Container(
-                    width: 40.w,
-                    height: 40.w,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.phone,
-                      color: TColors.primarycolor,
-                      size: 22.sp,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: 20.h),
-
-            // الصف السفلي: التاريخ والوقت
-            Container(
-              width: double.infinity,
-              height: 50.h,
-              padding: EdgeInsets.symmetric(horizontal: 12.w),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.r),
-                color: TColors.labeltext.withOpacity(0.2),
-              ),
-              child: Row(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              // الصف العلوي: صورة + الاسم + التخصص + الاتصال
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(Icons.calendar_today, color: Colors.white, size: 18.sp),
-                  SizedBox(width: 8.w),
-                  Text(
-                    date,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                  CircleAvatar(
+                    radius: 22.r,
+                    backgroundImage: AssetImage(imagePath),
                   ),
-                  Spacer(),
-                  Container(
-                    width: 1,
-                    height: 24.h,
-                    color: Colors.white.withOpacity(0.5),
+                  SizedBox(width: 16.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          doctorName,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          specialty,
+                          style: TextStyle(
+                            color: TColors.primarycolor3,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  Spacer(),
-                  Icon(Icons.access_time, color: Colors.white, size: 18.sp),
-                  SizedBox(width: 8.w),
-                  Text(
-                    time,
-                    style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                  GestureDetector(
+                    onTap: onCallTap,
+                    child: Container(
+                      width: 40.w,
+                      height: 40.w,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.phone,
+                        color: TColors.primarycolor,
+                        size: 22.sp,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ),
-          ],
+              SizedBox(height: 20.h),
+          
+              // الصف السفلي: التاريخ والوقت
+              Container(
+                width: double.infinity,
+                height: 50.h,
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10.r),
+                  color: TColors.labeltext.withOpacity(0.2),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.calendar_today, color: Colors.white, size: 18.sp),
+                    SizedBox(width: 8.w),
+                    Text(
+                      date,
+                      style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                    ),
+                    Spacer(),
+                    Container(
+                      width: 1,
+                      height: 24.h,
+                      color: Colors.white.withOpacity(0.5),
+                    ),
+                    Spacer(),
+                    Icon(Icons.access_time, color: Colors.white, size: 18.sp),
+                    SizedBox(width: 8.w),
+                    Text(
+                      time,
+                      style: TextStyle(color: Colors.white, fontSize: 12.sp),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     ),

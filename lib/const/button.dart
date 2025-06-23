@@ -5,11 +5,13 @@ import '../const/colors.dart'; // Update path if needed
 class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final bool isLoading;
 
   const PrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
+    this.isLoading = false,
   });
 
   @override
@@ -24,15 +26,24 @@ class PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.r),
           ),
         ),
-        onPressed: onPressed,
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: TColors.primarycolor3,fontWeight: FontWeight.w500,fontSize: 16.sp)
-        ),
+        onPressed: isLoading ? null : onPressed,
+        child: isLoading
+            ? const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              )
+            : Text(
+                text,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                      color: TColors.primarycolor3,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 16.sp,
+                    ),
+              ),
       ),
     );
   }
 }
+
 class PrimaryTextButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
