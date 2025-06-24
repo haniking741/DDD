@@ -6,7 +6,6 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isLoading; // NEW
-
   const PrimaryButton({
     super.key,
     required this.text,
@@ -35,8 +34,8 @@ class PrimaryButton extends StatelessWidget {
                   color: TColors.primarycolor3,
                   strokeWidth: 2.5,
                 ),
-              )
-            : Text(
+            )
+            :Text(
                 text,
                 style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                       color: TColors.primarycolor3,

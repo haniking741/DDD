@@ -60,7 +60,14 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
       child: Scaffold(
         backgroundColor: TColors.primarycolor3,
         appBar: AppBar(
-          title: Text(widget.category),
+          title:  Text(
+                    widget.category, // أو استخدم `localeProvider.translate("appointments")`
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                      color: TColors.labeltext,
+                    ),
+                  ),
           centerTitle: true,
           backgroundColor: TColors.primarycolor3,
           elevation: 0,

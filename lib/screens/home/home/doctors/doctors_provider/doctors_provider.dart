@@ -122,6 +122,5 @@ class DoctorProvider extends ChangeNotifier {
   List<Doctor> getDoctorsBySpecialty(String specialty) {
     return _doctors.where((d) => d.specialty == specialty).toList();
   }
-
   List<Doctor> get allDoctors => _doctors;
 }

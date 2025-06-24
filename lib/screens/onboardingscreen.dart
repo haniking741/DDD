@@ -93,7 +93,7 @@ class Onboarding extends StatelessWidget {
   onPressed: () {
     Navigator.of(context).pushAndRemoveUntil(
       PageRouteBuilder(
-        transitionDuration: Duration(milliseconds: 1000),
+        transitionDuration: Duration(milliseconds: 400),
         pageBuilder: (context, animation, secondaryAnimation) => SignupScreen(),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SlideTransition(
