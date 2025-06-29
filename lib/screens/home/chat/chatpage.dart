@@ -42,7 +42,7 @@ class Chatpage extends StatelessWidget {
                   ),
                   SizedBox(height: 15.h),
 
-                   Container(
+                  Container(
                     padding: EdgeInsets.symmetric(horizontal: 16.w),
                     decoration: BoxDecoration(
                       color: TColors.primarycolor3,
@@ -57,10 +57,8 @@ class Chatpage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 15.h),
-
                 ],
               ),
-              
             ),
 
             // ⚪ White Container with rounded top corners
@@ -78,18 +76,47 @@ class Chatpage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 60.h,
+                    height: 100.h,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemCount: chatProvider.chats.length,
-                      itemBuilder: (_, index) {
+                      separatorBuilder: (_, __) => SizedBox(width: 12.w),
+                      itemBuilder: (context, index) {
                         final chat = chatProvider.chats[index];
-                        return CircleAvatar(
-                          backgroundImage: AssetImage(chat.image),
-                          radius: 28.r,
+                        return Column(
+                          children: [
+                            Stack(
+                              children: [
+                                CircleAvatar(
+                                  backgroundImage: AssetImage(chat.image),
+                                  radius: 28.r,
+                                ),
+                                if (chat.isOnline)
+                                  Positioned(
+                                    bottom: 2.h,
+                                    right: 2.w,
+                                    child: Container(
+                                      width: 10.w,
+                                      height: 10.h,
+                                      decoration: const BoxDecoration(
+                                        color: Colors.green,
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                            SizedBox(height: 6.h),
+                            Text(
+                              chat.name
+                                  .split(' ')
+                                  .first, // Show only first name
+                              style: TextStyle(fontSize: 12.sp),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
                         );
                       },
-                      separatorBuilder: (_, __) => SizedBox(width: 12.w),
                     ),
                   ),
                 ],
@@ -101,92 +128,103 @@ class Chatpage extends StatelessWidget {
 
             // 📝 Chat List
             // 📝 Chat List
-Expanded(
-  child: ListView.builder(
-    padding: EdgeInsets.symmetric(horizontal: 12.w),
-    itemCount: chatProvider.chats.length,
-    itemBuilder: (context, index) {
-      final chat = chatProvider.chats[index];
-      return Padding(
-        padding: EdgeInsets.symmetric(vertical: 8.h),
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(
-              color: Colors.grey.shade300,
-              width: 1,
-            ),
-          ),
-          child: InkWell(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => DoctorChatScreen(
-          doctorName: chat.name,
-          doctorImage: chat.image,
-          isOnline: chat.isOnline,
-        ),
-      ),
-    );
-  },
-  child: Container(
-    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16.r),
-      border: Border.all(
-        color: Colors.grey.shade300,
-        width: 1,
-      ),
-    ),
-    child: ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: Stack(
-        children: [
-          CircleAvatar(
-            backgroundImage: AssetImage(chat.image),
-            radius: 26.r,
-          ),
-          if (chat.isOnline)
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                width: 10.w,
-                height: 10.h,
-                decoration: const BoxDecoration(
-                  color: Colors.green,
-                  shape: BoxShape.circle,
-                ),
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 12.w),
+                itemCount: chatProvider.chats.length,
+                itemBuilder: (context, index) {
+                  final chat = chatProvider.chats[index];
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 12.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16.r),
+                        border: Border.all(
+                          color: Colors.grey.shade300,
+                          width: 1,
+                        ),
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 400),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      DoctorChatScreen(
+                                        doctorName: chat.name,
+                                        doctorImage: chat.image,
+                                        isOnline: chat.isOnline,
+                                      ),
+                              transitionsBuilder: (
+                                context,
+                                animation,
+                                secondaryAnimation,
+                                child,
+                              ) {
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: child,
+                                );
+                              },
+                            ),
+                          );
+                        },
+
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          leading: Stack(
+                            children: [
+                              CircleAvatar(
+                                backgroundImage: AssetImage(chat.image),
+                                radius: 26.r,
+                              ),
+                              if (chat.isOnline)
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    width: 10.w,
+                                    height: 10.h,
+                                    decoration: const BoxDecoration(
+                                      color: Colors.green,
+                                      shape: BoxShape.circle,
+                                    ),
+                                  ),
+                                ),
+                            ],
+                          ),
+                          title: Text(
+                            chat.name,
+                            style: TextStyle(fontSize: 14.sp),
+                          ),
+                          subtitle: Text(
+                            chat.message,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                          trailing: Text(
+                            chat.time,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-        ],
-      ),
-      title: Text(
-        chat.name,
-        style: TextStyle(fontSize: 14.sp),
-      ),
-      subtitle: Text(
-        chat.message,
-        style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-      ),
-      trailing: Text(
-        chat.time,
-        style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-      ),
-    ),
-  ),
-),
-
-        ),
-      );
-    },
-  ),
-),
-
           ],
         ),
       ),

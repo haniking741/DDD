@@ -60,14 +60,15 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
       child: Scaffold(
         backgroundColor: TColors.primarycolor3,
         appBar: AppBar(
-          title:  Text(
-                    widget.category, // أو استخدم `localeProvider.translate("appointments")`
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.sp,
-                      color: TColors.labeltext,
-                    ),
-                  ),
+          title: Text(
+            widget
+                .category, // أو استخدم `localeProvider.translate("appointments")`
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16.sp,
+              color: TColors.labeltext,
+            ),
+          ),
           centerTitle: true,
           backgroundColor: TColors.primarycolor3,
           elevation: 0,
@@ -239,7 +240,6 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
                   ],
                 ),
               ),
-              Icon(CupertinoIcons.chat_bubble_2_fill, color: Colors.blue),
             ],
           ),
           SizedBox(height: 10.h),

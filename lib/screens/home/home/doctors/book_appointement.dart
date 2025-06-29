@@ -133,6 +133,7 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
   bool isSameDate(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;
   }
+
   @override
   Widget build(BuildContext context) {
     final locale = Provider.of<LocaleProvider>(context);
@@ -346,126 +347,153 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
               ),
             ),
           ],
-         if (_selectedDate != null) ...[
-  SizedBox(height: 20.h),
-  Directionality(
-    textDirection: locale.locale.languageCode == 'ar' ? TextDirection.rtl : TextDirection.ltr,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          locale.translate("available_times"),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 10.h),
-        SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Wrap(
-            spacing: 10.w,
-            runSpacing: 10.h,
-            children: _timeSlots.map((slot) {
-              bool isSelected = slot == _selectedTimeSlot;
-              return ChoiceChip(
-                label: Text(slot),
-                selected: isSelected,
-                onSelected: (_) => setState(() => _selectedTimeSlot = slot),
-                selectedColor: TColors.primarycolor.withOpacity(0.4),
-                backgroundColor: Colors.grey.shade200,
-                labelStyle: TextStyle(color: isSelected ? TColors.primarycolor : Colors.black),
-              );
-            }).toList(),
-          ),
-        ),
-        if (_showTimeSlotError)
-  Padding(
-    padding: EdgeInsets.only(top: 8.h),
-    child: Text(
-      locale.translate("please_select_time"),
-      style: TextStyle(color: Colors.red, fontSize: 13.sp),
-    ),
-  ),
-          SizedBox(height: 10.h,),
+          if (_selectedDate != null) ...[
+            SizedBox(height: 20.h),
+            Directionality(
+              textDirection:
+                  locale.locale.languageCode == 'ar'
+                      ? TextDirection.rtl
+                      : TextDirection.ltr,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    locale.translate("available_times"),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Wrap(
+                      spacing: 10.w,
+                      runSpacing: 10.h,
+                      children:
+                          _timeSlots.map((slot) {
+                            bool isSelected = slot == _selectedTimeSlot;
+                            return ChoiceChip(
+                              label: Text(slot),
+                              selected: isSelected,
+                              onSelected:
+                                  (_) =>
+                                      setState(() => _selectedTimeSlot = slot),
+                              selectedColor: TColors.primarycolor.withOpacity(
+                                0.4,
+                              ),
+                              backgroundColor: Colors.grey.shade200,
+                              labelStyle: TextStyle(
+                                color:
+                                    isSelected
+                                        ? TColors.primarycolor
+                                        : Colors.black,
+                              ),
+                            );
+                          }).toList(),
+                    ),
+                  ),
+                  if (_showTimeSlotError)
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Text(
+                        locale.translate("please_select_time"),
+                        style: TextStyle(color: Colors.red, fontSize: 13.sp),
+                      ),
+                    ),
+                  SizedBox(height: 10.h),
 
-  Text(
-          locale.translate("available_types"),
-          style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600),
-        ),
-        SizedBox(height: 10.h),
-  Wrap(
-          spacing: 10.w,
-          runSpacing: 10.h,
-          children: _types.map((slot) {
-            bool isSelected = slot == _selectedType;
-            return ChoiceChip(
-              label: Text(slot),
-              selected: isSelected,
-              onSelected: (_) => setState(() => _selectedType = slot),
-              selectedColor: TColors.primarycolor.withOpacity(0.4),
-              backgroundColor: Colors.grey.shade200,
-              labelStyle: TextStyle(color: isSelected ? TColors.primarycolor : Colors.black),
-            );
-          }).toList(),
-        ),
-         if (_showTypeSlotError)
-  Padding(
-    padding: EdgeInsets.only(top: 8.h),
-    child: Text(
-      locale.translate("available_types"),
-      style: TextStyle(color: Colors.red, fontSize: 13.sp),
-    ),
-  ),
-SizedBox(height: 15.h,),
-        if (_selectedTimeSlot != null)
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 12.h),
-            child: Text(
-              "${locale.translate("you_selected")}: ${BoardDateFormat('yyyy/MM/dd').format(_selectedDate!)} - $_selectedTimeSlot",
-              style: TextStyle(fontSize: 14.sp),
+                  Text(
+                    locale.translate("available_types"),
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: 10.h),
+                  Wrap(
+                    spacing: 10.w,
+                    runSpacing: 10.h,
+                    children:
+                        _types.map((slot) {
+                          bool isSelected = slot == _selectedType;
+                          return ChoiceChip(
+                            label: Text(slot),
+                            selected: isSelected,
+                            onSelected:
+                                (_) => setState(() => _selectedType = slot),
+                            selectedColor: TColors.primarycolor.withOpacity(
+                              0.4,
+                            ),
+                            backgroundColor: Colors.grey.shade200,
+                            labelStyle: TextStyle(
+                              color:
+                                  isSelected
+                                      ? TColors.primarycolor
+                                      : Colors.black,
+                            ),
+                          );
+                        }).toList(),
+                  ),
+                  if (_showTypeSlotError)
+                    Padding(
+                      padding: EdgeInsets.only(top: 8.h),
+                      child: Text(
+                        locale.translate("available_types"),
+                        style: TextStyle(color: Colors.red, fontSize: 13.sp),
+                      ),
+                    ),
+                  SizedBox(height: 15.h),
+                  if (_selectedTimeSlot != null)
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 12.h),
+                      child: Text(
+                        "${locale.translate("you_selected")}: ${BoardDateFormat('yyyy/MM/dd').format(_selectedDate!)} - $_selectedTimeSlot",
+                        style: TextStyle(fontSize: 14.sp),
+                      ),
+                    ),
+                  PrimaryButton(
+                    text: locale.translate("confirm"),
+                    isLoading: _isLoading,
+                    onPressed: () async {
+                      setState(() {
+                        _showTimeSlotError = _selectedTimeSlot == null;
+                        _showTypeSlotError = _selectedType == null;
+                      });
+
+                      if (_selectedTimeSlot != null && _selectedType != null) {
+                        setState(() => _isLoading = true);
+
+                        // Simulate loading (or call async function here)
+                        await Future.delayed(const Duration(seconds: 2));
+
+                        if (mounted) {
+                          setState(() => _isLoading = false);
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                locale.translate("appointment_confirmed"),
+                              ),
+                              backgroundColor: Colors.green,
+                              duration: const Duration(seconds: 2),
+                            ),
+                          );
+
+                          // Optional delay before closing to show the Snackbar
+                          await Future.delayed(
+                            const Duration(milliseconds: 300),
+                          );
+
+                          Navigator.of(context).pop();
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ),
-      PrimaryButton(
-  text: locale.translate("confirm"),
-  isLoading: _isLoading,
-  onPressed: () async {
-    setState(() {
-      _showTimeSlotError = _selectedTimeSlot == null;
-      _showTypeSlotError = _selectedType == null;
-    });
-
-    if (_selectedTimeSlot != null && _selectedType != null) {
-      setState(() => _isLoading = true);
-
-      // Simulate loading (or call async function here)
-      await Future.delayed(const Duration(seconds: 2));
-
-      if (mounted) {
-  setState(() => _isLoading = false);
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(locale.translate("appointment_confirmed")),
-      backgroundColor: Colors.green,
-      duration: const Duration(seconds: 2),
-      
-    ),
-  );
-
-  // Optional delay before closing to show the Snackbar
-  await Future.delayed(const Duration(milliseconds: 300));
-
-  Navigator.of(context).pop();
-}
-
-    }
-  },
-),
-
-
-
-      ],
-    ),
-  ),
-]
+          ],
         ],
       ),
     );
