@@ -4,7 +4,6 @@ import 'package:dawini/const/colors.dart';
 import 'package:dawini/screens/home/home/doctors/book_appointement.dart';
 import 'package:dawini/screens/home/home/doctors/doctors_provider/doctors_provider.dart';
 import 'package:dawini/services/translation.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';

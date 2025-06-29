@@ -3,7 +3,7 @@ import 'package:dawini/screens/home/chat/chat_provider/chat_modal.dart';
 import 'package:flutter/material.dart';
 
 class ChatProvider with ChangeNotifier {
-  List<Chat> _chats = [
+  final List<Chat> _chats = [
     Chat(
         name: 'Carla Schoen',
         message: 'Perfect, will check it',

@@ -1,6 +1,7 @@
 import 'package:dawini/providers/navigationbar_provider.dart';
 import 'package:dawini/providers/onboarding_provider.dart';
 import 'package:dawini/providers/theme_provider.dart';
+import 'package:dawini/screens/authentication/auth_provider/auth_provider.dart';
 import 'package:dawini/screens/authentication/forgotpassword/forgotpassword.dart';
 import 'package:dawini/screens/authentication/login/loginscreen.dart';
 import 'package:dawini/screens/authentication/signup/signupscreen.dart';
@@ -9,6 +10,7 @@ import 'package:dawini/screens/home/booking/booking_provider/booking_provider.da
 import 'package:dawini/screens/home/chat/chat_provider/chat_provider.dart';
 import 'package:dawini/screens/home/home/doctors/doctors_provider/doctors_provider.dart';
 import 'package:dawini/services/translation.dart';
+import 'package:dawini/spabase_config.dart';
 import 'package:dawini/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +20,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await SupabaseConfig.initialize();
 
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
@@ -36,6 +40,9 @@ void main() async {
         ChangeNotifierProvider(create: (_) => DoctorProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentProvider()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ), // ✅ Add this line
       ],
       child: const MyApp(),
     ),

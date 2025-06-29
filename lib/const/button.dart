@@ -4,13 +4,14 @@ import '../const/colors.dart'; // Update path if needed
 
 class PrimaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
-  final bool isLoading; // NEW
+  final VoidCallback? onPressed;
+  final bool isLoading;
+
   const PrimaryButton({
     super.key,
     required this.text,
     required this.onPressed,
-    this.isLoading = false, // default false
+    this.isLoading = false,
   });
 
   @override
@@ -25,24 +26,25 @@ class PrimaryButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(20.r),
           ),
         ),
-        onPressed: isLoading ? null : onPressed, // disable when loading
-        child: isLoading
-            ? SizedBox(
-                height: 24.h,
-                width: 24.w,
-                child: CircularProgressIndicator(
-                  color: TColors.primarycolor3,
-                  strokeWidth: 2.5,
+        onPressed: isLoading ? null : onPressed,
+        child:
+            isLoading
+                ? SizedBox(
+                  height: 24.h,
+                  width: 24.w,
+                  child: CircularProgressIndicator(
+                    color: TColors.primarycolor3,
+                    strokeWidth: 2.5,
+                  ),
+                )
+                : Text(
+                  text,
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: TColors.primarycolor3,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16.sp,
+                  ),
                 ),
-            )
-            :Text(
-                text,
-                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                      color: TColors.primarycolor3,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
-                    ),
-              ),
       ),
     );
   }
@@ -69,10 +71,10 @@ class PrimaryTextButton extends StatelessWidget {
       child: Text(
         text,
         style: Theme.of(context).textTheme.bodySmall!.copyWith(
-              color: TColors.primarycolor,
-              decoration: TextDecoration.underline,
-              fontWeight: FontWeight.w500,
-            ),
+          color: TColors.primarycolor,
+          decoration: TextDecoration.underline,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
