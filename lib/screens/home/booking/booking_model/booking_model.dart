@@ -1,4 +1,4 @@
-class Appointment {
+class AppointmentBooking {
   final String id;
   final String doctorName;
   final String location;
@@ -8,7 +8,7 @@ class Appointment {
   bool remind;
   final String type;
 
-  Appointment({
+  AppointmentBooking({
     required this.type,
     required this.id,
     required this.doctorName,

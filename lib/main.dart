@@ -5,8 +5,9 @@ import 'package:dawini/screens/authentication/auth_provider/auth_provider.dart';
 import 'package:dawini/screens/authentication/forgotpassword/forgotpassword.dart';
 import 'package:dawini/screens/authentication/login/loginscreen.dart';
 import 'package:dawini/screens/authentication/signup/signupscreen.dart';
+import 'package:dawini/screens/home/booking/booking_model/booking_model.dart';
 import 'package:dawini/screens/home/booking/booking_provider/booking_provider.dart'
-    show AppointmentProvider;
+    show AppointmentProvider, AppointmentProviderB;
 import 'package:dawini/screens/home/chat/chat_provider/chat_provider.dart';
 import 'package:dawini/screens/home/home/doctors/doctors_provider/doctors_provider.dart';
 import 'package:dawini/services/translation.dart';
@@ -17,6 +18,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'screens/home/home/doctors/appointement_provider.dart/booking_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +42,7 @@ void main() async {
         ChangeNotifierProvider.value(value: localeProvider),
         ChangeNotifierProvider(create: (_) => DoctorProvider()),
         ChangeNotifierProvider(create: (_) => AppointmentProvider()),
+         ChangeNotifierProvider(create: (_) => AppointmentProviderB()),
         ChangeNotifierProvider(create: (_) => ChatProvider()),
         ChangeNotifierProvider(
           create: (_) => AuthProvider(),

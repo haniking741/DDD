@@ -1,4 +1,5 @@
 class Doctor {
+  final String id;
   final String name;
   final String specialty;
   final String image;
@@ -10,10 +11,11 @@ class Doctor {
   final int reviews;
   final List<int> workingDays;
   final List<String> workingHours;
-  final List<String> offDates; // Use List<DateTime> if needed
+  final List<String> offDates;
   final String description;
 
   Doctor({
+    required this.id,
     required this.name,
     required this.specialty,
     required this.image,
@@ -30,31 +32,29 @@ class Doctor {
   });
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
-    return Doctor(
-      name: json['name'],
-      specialty: json['specialty'],
-      image: json['image'],
-      lat:
-          json['lat'] is String
-              ? double.parse(json['lat'])
-              : json['lat'].toDouble(),
-      lng:
-          json['lng'] is String
-              ? double.parse(json['lng'])
-              : json['lng'].toDouble(),
-      patients: json['patients'],
-      experience: json['experience'],
-      rating: json['rating'].toDouble(),
-      reviews: json['reviews'],
-      workingDays: List<int>.from(json['workingDays']),
-      workingHours: List<String>.from(json['workingHours']),
-      offDates: List<String>.from(json['offDates']),
-      description: json['description'],
-    );
-  }
+  return Doctor(
+    id: json['id'] ?? '',
+    name: json['name'] ?? '',
+    specialty: json['speciality'] ?? '',
+    image: json['image'] ?? '',
+    lat: json['lat'] is String ? double.tryParse(json['lat']) ?? 0.0 : (json['lat'] ?? 0.0).toDouble(),
+    lng: json['lng'] is String ? double.tryParse(json['lng']) ?? 0.0 : (json['lng'] ?? 0.0).toDouble(),
+    patients: int.tryParse(json['patients'].toString()) ?? 0,
+    experience: int.tryParse(json['experience'].toString()) ?? 0,
+    rating: double.tryParse(json['rating'].toString()) ?? 0.0,
+    reviews: int.tryParse(json['reviews'].toString()) ?? 0,
+    workingDays: (json['workingDays'] as List).map((e) => int.tryParse(e.toString()) ?? 0).toList(),
+    workingHours: (json['workingHours'] as List).map((e) => e.toString()).toList(),
+    offDates: (json['offDates'] as List).map((e) => e.toString()).toList(),
+    description: json['description'] ?? '',
+  );
+}
+
+
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'name': name,
       'specialty': specialty,
       'image': image,

@@ -25,6 +25,7 @@ dependencies:
   awesome_snackbar_content: ^0.1.6
   flutter_switch: ^0.3.2
   supabase_flutter: ^2.9.1
+  shimmer: ^3.0.0
   
 
 

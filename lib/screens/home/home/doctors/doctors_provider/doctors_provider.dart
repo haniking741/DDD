@@ -1,126 +1,59 @@
-import 'package:flutter/material.dart';
 import 'package:dawini/screens/home/home/doctors/doctors_provider/doctors_model/doctorf_models.dart';
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class DoctorProvider extends ChangeNotifier {
-  final List<Doctor> _doctors = [
-    Doctor(
-      name: "Dr. Aissoug Ziad",
-      specialty: "Dentist",
-      image: "assets/icons/doctor.png",
-      lat: 35.400672,
-      lng: 8.118525,
-      patients: 1800,
-      experience: 7,
-      rating: 4.8,
-      reviews: 120,
-      workingDays: [1, 2, 3, 4, 6, 7],
-      workingHours: ["08:00", "09:00", "10:00", "11:00"],
-      offDates: [],
-      description:
-          "Dr. Aissoug Ziad is a dentist with 7 years of experience.\n"
-          "He treats 1800 patients in Khenchela with a 4.8 rating.\n"
-          "Available most days from 08:00 to 11:00.\n"
-          "Known for early morning appointments.",
-    ),
-    Doctor(
-      name: "Dr. Ramdhani Aissa",
-      specialty: "Dentist",
-      image: "assets/icons/doctor.png",
-      lat: 35.396671,
-      lng: 8.109620,
-      patients: 1500,
-      experience: 5,
-      rating: 4.6,
-      reviews: 97,
-      workingDays: [1, 2, 3, 4, 6, 7],
-      workingHours: ["09:00", "10:00", "14:00"],
-      offDates: [],
-      description:
-          "Dr. Ramdhani Aissa is a Khenchela-based dentist.\n"
-          "He has 5 years of experience and 1500 patients.\n"
-          "Rated 4.6, he works morning and early afternoons.\n"
-          "Available six days per week.",
-    ),
-    Doctor(
-      name: "Dr. Khaled Messaoud",
-      specialty: "Neurologue",
-      image: "assets/icons/doctor.png",
-      lat: 36.7550,
-      lng: 3.0485,
-      patients: 2200,
-      experience: 9,
-      rating: 4.9,
-      reviews: 164,
-      workingDays: [1, 2, 3, 4, 6, 7],
-      workingHours: ["08:00", "10:00", "16:00"],
-      offDates: [],
-      description:
-          "Dr. Khaled Messaoud is a neurologist in Algiers.\n"
-          "He has 9 years of experience and a 4.9 rating.\n"
-          "Consults over 2200 patients with great trust.\n"
-          "Available mornings and afternoons.",
-    ),
-    Doctor(
-      name: "Dr. Selma Djouadi",
-      specialty: "Génécologue",
-      image: "assets/icons/doctor.png",
-      lat: 36.7577,
-      lng: 3.0432,
-      patients: 1700,
-      experience: 6,
-      rating: 4.7,
-      reviews: 109,
-      workingDays: [1, 2, 3, 4, 6, 7],
-      workingHours: ["09:00", "13:00", "15:00"],
-      offDates: [],
-      description:
-          "Dr. Selma Djouadi is a gynecologist in Algiers.\n"
-          "With 6 years of experience, she has a 4.7 rating.\n"
-          "She serves 1700 patients weekly.\n"
-          "Working flexible hours six days a week.",
-    ),
-    Doctor(
-      name: "Dr. Yasmine Bouteldja",
-      specialty: "Generaliste",
-      image: "assets/icons/doctor.png",
-      lat: 36.7588,
-      lng: 3.0466,
-      patients: 1300,
-      experience: 4,
-      rating: 4.5,
-      reviews: 88,
-      workingDays: [1, 2, 3, 4, 6, 7],
-      workingHours: ["08:00", "09:00", "11:00", "14:00"],
-      offDates: [],
-      description:
-          "Dr. Yasmine Bouteldja is a generalist with 4 years.\n"
-          "She helps 1300 patients in Algiers.\n"
-          "Rated 4.5, she is available from 08:00 to 14:00.\n"
-          "She works almost every day.",
-    ),
-    Doctor(
-      name: "Dr. Mourad Khettab",
-      specialty: "Dentist",
-      image: "assets/icons/doctor.png",
-      lat: 36.7510,
-      lng: 3.0400,
-      patients: 1950,
-      experience: 8,
-      rating: 4.8,
-      reviews: 132,
-      workingDays: [1, 2, 3, 4, 6, 7],
-      workingHours: ["08:30", "09:30", "10:30", "13:30"],
-      offDates: [],
-      description:
-          "Dr. Mourad Khettab is a dentist in Algiers.\n"
-          "He has 8 years of experience and a 4.8 rating.\n"
-          "Treats 1950 patients with flexible slots.\n"
-          "Open from 08:30 to early afternoon.",
-    ),
-  ];
+  final List<Doctor> _doctors = [];
+  final SupabaseClient client = Supabase.instance.client;
+
+  List<Doctor> get allDoctors => _doctors;
 
   List<Doctor> getDoctorsBySpecialty(String specialty) {
-    return _doctors.where((d) => d.specialty == specialty).toList();
+    return _doctors
+        .where((d) => d.specialty.toLowerCase() == specialty.toLowerCase())
+        .toList();
   }
-  List<Doctor> get allDoctors => _doctors;
+
+  Future<void> fetchDoctorsBySpecialtyFromSupabase(String specialty) async {
+  try {
+    final response = await client
+        .from('doctors')
+        .select()
+        .eq('speciality', specialty);
+
+    if (response is List) {
+      _doctors.clear();
+
+      _doctors.addAll(response.map((json) {
+        final workingHoursList = (json['working_hours'] as List?)?.map((e) => e.toString()).toList() ?? [];
+
+        // Start & end from list if available, else fallback
+        final startHour = workingHoursList.isNotEmpty ? workingHoursList.first : "08:00";
+        final endHour = workingHoursList.length > 1 ? workingHoursList.last : "17:00";
+
+        return Doctor(
+          name: json['name'] ?? '',
+          specialty: json['speciality'] ?? '',
+          image: json['image_url'] ?? 'assets/icons/doctor.png',
+          lat: (json['lat'] ?? 0).toDouble(),
+          lng: (json['lng'] ?? 0).toDouble(),
+          patients: json['patients'] ?? 0,
+          experience: json['experience_years'] ?? 0,
+          rating: (json['rating'] ?? 4.7).toDouble(),
+          reviews: json['reviews'] ?? 100,
+          workingDays: [1, 2, 3, 4, 6, 7], // لاحقاً يمكن جلبها من قاعدة البيانات
+          workingHours: workingHoursList,
+          offDates: (json['holidays'] as List?)?.map((e) => e.toString()).toList() ?? [],
+          description: json['description'] ?? '',
+          id: json['id'] ?? '',
+        );
+      }).toList());
+
+      notifyListeners();
+    }
+  } catch (e) {
+    debugPrint("❌ Error fetching doctors by specialty: $e");
+  }
+}
+
 }

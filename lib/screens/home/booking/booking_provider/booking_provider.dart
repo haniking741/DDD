@@ -1,9 +1,9 @@
 import 'package:dawini/screens/home/booking/booking_model/booking_model.dart';
 import 'package:flutter/material.dart';
 
-class AppointmentProvider with ChangeNotifier {
-  final List<Appointment> _appointments = [
-    Appointment(
+class AppointmentProviderB with ChangeNotifier {
+  final List<AppointmentBooking> _appointments = [
+    AppointmentBooking(
       id: '1',
       doctorName: 'Jenny William',
       location: 'G8502 Preston Rd. Inglewood',
@@ -13,7 +13,7 @@ class AppointmentProvider with ChangeNotifier {
       remind: true,
       type: 'visit'
     ),
-    Appointment(
+    AppointmentBooking(
       id: '2',
       doctorName: 'Guy Hawkins',
       location: 'G8502 Preston Rd. Inglewood',
@@ -25,7 +25,7 @@ class AppointmentProvider with ChangeNotifier {
     ),
   ];
 
-  List<Appointment> get appointments => _appointments;
+  List<AppointmentBooking> get appointments => _appointments;
 
   void toggleReminder(String id) {
     final index = _appointments.indexWhere((element) => element.id == id);

@@ -10,7 +10,7 @@ class BookingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appointmentProvider = Provider.of<AppointmentProvider>(context);
+    final appointmentProvider = Provider.of<AppointmentProviderB>(context);
     final appointments = appointmentProvider.appointments;
     final localeProvider = Provider.of<LocaleProvider>(context);
     return SafeArea(

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shimmer/shimmer.dart';
 
 class DoctorsFetch extends StatefulWidget {
   final String category;
@@ -19,6 +20,18 @@ class DoctorsFetch extends StatefulWidget {
 }
 
 class _DoctorsFetchState extends State<DoctorsFetch> {
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      await Provider.of<DoctorProvider>(context, listen: false)
+          .fetchDoctorsBySpecialtyFromSupabase(widget.category);
+      setState(() => _isLoading = false);
+    });
+  }
+
   void openGoogleMaps({
     required BuildContext context,
     required double lat,
@@ -51,17 +64,14 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
   @override
   Widget build(BuildContext context) {
     final localeProvider = Provider.of<LocaleProvider>(context);
-    final doctors = context.watch<DoctorProvider>().getDoctorsBySpecialty(
-      widget.category,
-    );
+    final doctors = context.watch<DoctorProvider>().allDoctors;
 
     return SafeArea(
       child: Scaffold(
         backgroundColor: TColors.primarycolor3,
         appBar: AppBar(
           title: Text(
-            widget
-                .category, // أو استخدم `localeProvider.translate("appointments")`
+            widget.category,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 16.sp,
@@ -107,49 +117,68 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
-          child:
-              doctors.isEmpty
-                  ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          localeProvider.translate("no_item"),
-                          style: TextStyle(fontSize: 16.sp, color: Colors.grey),
+          child: _isLoading
+              ? ListView.builder(
+                  itemCount: 4,
+                  itemBuilder: (_, __) => Padding(
+                    padding: EdgeInsets.only(bottom: 12.h),
+                    child: Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Container(
+                        height: 120.h,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12.r),
                         ),
-                        Image.asset(
-                          "assets/images/empty.gif",
-                          width: double.infinity,
-                          height: 200.w,
-                        ),
-                      ],
+                      ),
                     ),
-                  )
-                  : ListView.builder(
-                    itemCount: doctors.length,
-                    itemBuilder: (context, index) {
-                      final doctor = doctors[index];
-                      return Padding(
-                        padding: EdgeInsets.only(bottom: 12.h),
-                        child: _buildDoctorCard(
-                          context,
-                          doctor.name,
-                          doctor.specialty,
-                          doctor.image,
-                          doctor.lat,
-                          doctor.lng,
-                          doctor.patients,
-                          doctor.experience,
-                          doctor.rating,
-                          doctor.reviews,
-                          doctor.workingDays,
-                          doctor.workingHours,
-                          doctor.offDates,
-                          doctor.description,
-                        ),
-                      );
-                    },
                   ),
+                )
+              : doctors.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            localeProvider.translate("no_item"),
+                            style:
+                                TextStyle(fontSize: 16.sp, color: Colors.grey),
+                          ),
+                          Image.asset(
+                            "assets/images/empty.gif",
+                            width: double.infinity,
+                            height: 200.w,
+                          ),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      itemCount: doctors.length,
+                      itemBuilder: (context, index) {
+                        final doctor = doctors[index];
+                        return Padding(
+                          padding: EdgeInsets.only(bottom: 12.h),
+                          child: _buildDoctorCard(
+                            context,
+                            doctor.name,
+                            doctor.specialty,
+                            doctor.image,
+                            doctor.lat,
+                            doctor.lng,
+                            doctor.patients,
+                            doctor.experience,
+                            doctor.rating,
+                            doctor.reviews,
+                            doctor.workingDays,
+                            doctor.workingHours,
+                            doctor.offDates,
+                            doctor.description,
+                            doctor.id
+                          ),
+                        );
+                      },
+                    ),
         ),
       ),
     );
@@ -170,6 +199,7 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
     List<String> workingHours,
     List<String> offdates,
     String description,
+    String id
   ) {
     final localeProvider = Provider.of<LocaleProvider>(context);
 
@@ -192,7 +222,9 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
             children: [
               CircleAvatar(
                 radius: 30.r,
-                backgroundImage: AssetImage(imagePath),
+                backgroundImage: imagePath.startsWith("http")
+                    ? NetworkImage(imagePath)
+                    : AssetImage(imagePath) as ImageProvider,
               ),
               SizedBox(width: 12.w),
               Expanded(
@@ -232,7 +264,8 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
                         Text(" $rating "),
                         Text(
                           "($reviews Reviews)",
-                          style: TextStyle(color: Colors.grey, fontSize: 12.sp),
+                          style:
+                              TextStyle(color: Colors.grey, fontSize: 12.sp),
                         ),
                       ],
                     ),
@@ -259,7 +292,8 @@ class _DoctorsFetchState extends State<DoctorsFetch> {
                   workingDays: workingDays,
                   workingHours: workingHours,
                   offDates: offdates,
-                  description: description,
+                  description: description, 
+                  doctorId: id,
                 );
               },
               style: ElevatedButton.styleFrom(

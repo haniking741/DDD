@@ -1,13 +1,17 @@
 import 'package:board_datetime_picker/board_datetime_picker.dart';
 import 'package:dawini/const/button.dart';
 import 'package:dawini/const/colors.dart';
+import 'package:dawini/screens/home/home/doctors/appointement_provider.dart/appointement_model.dart';
+import 'package:dawini/screens/home/home/doctors/appointement_provider.dart/booking_provider.dart';
 import 'package:dawini/services/translation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 void showBookingAppointmentSheet(
   BuildContext context, {
+  required String doctorId,
   required String description,
   required String doctorName,
   required String doctorImagePath,
@@ -28,21 +32,21 @@ void showBookingAppointmentSheet(
       borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
     ),
     backgroundColor: Colors.white,
-    builder:
-        (_) => BookingAppointmentSheet(
-          doctorName: doctorName,
-          doctorImagePath: doctorImagePath,
-          specialization: specialization,
-          location: location,
-          patients: patients,
-          experience: experience,
-          rating: rating,
-          reviews: reviews,
-          workingDays: workingDays,
-          workingHours: workingHours,
-          offDates: offDates,
-          description: description,
-        ),
+    builder: (_) => BookingAppointmentSheet(
+      doctorId: doctorId, // أضف هذا
+      doctorName: doctorName,
+      doctorImagePath: doctorImagePath,
+      specialization: specialization,
+      location: location,
+      patients: patients,
+      experience: experience,
+      rating: rating,
+      reviews: reviews,
+      workingDays: workingDays,
+      workingHours: workingHours,
+      offDates: offDates,
+      description: description,
+    ),
   );
 }
 
@@ -59,6 +63,7 @@ class BookingAppointmentSheet extends StatefulWidget {
   final List<int> workingDays;
   final List<String> workingHours;
   final List<String> offDates;
+  final String doctorId;
 
   const BookingAppointmentSheet({
     super.key,
@@ -74,6 +79,7 @@ class BookingAppointmentSheet extends StatefulWidget {
     required this.workingDays,
     required this.workingHours,
     this.offDates = const [],
+    required this.doctorId
   });
 
   @override
@@ -151,9 +157,12 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
           Row(
             children: [
               CircleAvatar(
-                radius: 32.r,
-                backgroundImage: AssetImage(widget.doctorImagePath),
-              ),
+  radius: 32.r,
+  backgroundImage: widget.doctorImagePath.startsWith("http")
+      ? NetworkImage(widget.doctorImagePath)
+      : AssetImage(widget.doctorImagePath) as ImageProvider,
+),
+
               SizedBox(width: 12.w),
               Expanded(
                 child: Column(
@@ -207,22 +216,9 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
             ],
           ),
           SizedBox(height: 20.h),
-
-          Center(
-            child: Column(
+Column(
+  crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  locale.translate("make_appointement"),
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.bold,
-                    color: TColors.labeltext,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Column(
-                    children: [
                       Text(
                         locale.translate("About"),
                         style: TextStyle(
@@ -231,6 +227,7 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
                           color: TColors.primarycolor,
                         ),
                       ),
+                       SizedBox(height: 20.h),
                       Text(
                         widget.description,
                         style: TextStyle(
@@ -239,12 +236,8 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
                           color: TColors.labeltext,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+                                 ],
+),
           SizedBox(height: 20.h),
 
           PrimaryButton(
@@ -270,83 +263,6 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
               }
             },
           ),
-
-          if (_selectedDate != null) ...[
-            SizedBox(height: 20.h),
-            Directionality(
-              textDirection:
-                  locale.locale.languageCode == 'ar'
-                      ? TextDirection.rtl
-                      : TextDirection.ltr,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    locale.translate("available_times"),
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  SizedBox(height: 10.h),
-                  Wrap(
-                    spacing: 10.w,
-                    runSpacing: 10.h,
-                    children:
-                        _timeSlots.map((slot) {
-                          bool isSelected = slot == _selectedTimeSlot;
-                          return ChoiceChip(
-                            label: Text(slot),
-                            selected: isSelected,
-                            onSelected:
-                                (_) => setState(() => _selectedTimeSlot = slot),
-                            selectedColor: TColors.primarycolor.withOpacity(
-                              0.4,
-                            ),
-                            backgroundColor: Colors.grey.shade200,
-                            labelStyle: TextStyle(
-                              color:
-                                  isSelected
-                                      ? TColors.primarycolor
-                                      : Colors.black,
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                  SizedBox(height: 10.h),
-                  if (_showTimeSlotError)
-                    Padding(
-                      padding: EdgeInsets.only(top: 8.h),
-                      child: Text(
-                        locale.translate("please_select_time"),
-                        style: TextStyle(color: Colors.red, fontSize: 13.sp),
-                      ),
-                    ),
-                  SizedBox(height: 15.h),
-                  if (_selectedTimeSlot != null)
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      child: Text(
-                        "${locale.translate("you_selected")}: ${BoardDateFormat('yyyy/MM/dd').format(_selectedDate!)} - $_selectedTimeSlot",
-                        style: TextStyle(fontSize: 14.sp),
-                      ),
-                    ),
-                  PrimaryButton(
-                    text: locale.translate("confirm"),
-                    onPressed: () {
-                      if (_selectedTimeSlot == null) {
-                        setState(() {
-                          _showTimeSlotError = true;
-                        });
-                      } else {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
           if (_selectedDate != null) ...[
             SizedBox(height: 20.h),
             Directionality(
@@ -452,44 +368,69 @@ class _BookingAppointmentSheetState extends State<BookingAppointmentSheet> {
                         style: TextStyle(fontSize: 14.sp),
                       ),
                     ),
-                  PrimaryButton(
-                    text: locale.translate("confirm"),
-                    isLoading: _isLoading,
-                    onPressed: () async {
-                      setState(() {
-                        _showTimeSlotError = _selectedTimeSlot == null;
-                        _showTypeSlotError = _selectedType == null;
-                      });
+                PrimaryButton(
+  text: locale.translate("confirm"),
+  isLoading: _isLoading,
+  onPressed: () async {
+    setState(() {
+      _showTimeSlotError = _selectedTimeSlot == null;
+      _showTypeSlotError = _selectedType == null;
+    });
 
-                      if (_selectedTimeSlot != null && _selectedType != null) {
-                        setState(() => _isLoading = true);
+    if (_selectedTimeSlot != null && _selectedType != null) {
+      setState(() => _isLoading = true);
+      await Future.delayed(Duration.zero); // ✅ allow indicator to appear
 
-                        // Simulate loading (or call async function here)
-                        await Future.delayed(const Duration(seconds: 2));
+      try {
+        debugPrint("🟢 Confirm button pressed");
+        debugPrint("🟡 Adding appointment for doctor: ${widget.doctorId}");
 
-                        if (mounted) {
-                          setState(() => _isLoading = false);
+        final user = Supabase.instance.client.auth.currentUser;
+        final clientId = user?.id ?? "unknown_client";
+        final clientName = user?.userMetadata?['full_name'] ?? "Unknown Client";
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                locale.translate("appointment_confirmed"),
-                              ),
-                              backgroundColor: Colors.green,
-                              duration: const Duration(seconds: 2),
-                            ),
-                          );
+        final appointment = Appointment(
+          clientId: clientId,
+          clientName: clientName,
+          date: BoardDateFormat('yyyy-MM-dd').format(_selectedDate!),
+          time: _selectedTimeSlot!,
+          type: _selectedType!,
+        );
 
-                          // Optional delay before closing to show the Snackbar
-                          await Future.delayed(
-                            const Duration(milliseconds: 300),
-                          );
+        await Provider.of<AppointmentProvider>(context, listen: false)
+            .addAppointment(widget.doctorId, appointment);
 
-                          Navigator.of(context).pop();
-                        }
-                      }
-                    },
-                  ),
+        if (!mounted) return;
+
+        setState(() => _isLoading = false);
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(locale.translate("appointment_confirmed")),
+            backgroundColor: Colors.green,
+            duration: const Duration(seconds: 2),
+          ),
+        );
+
+        await Future.delayed(const Duration(milliseconds: 300));
+        Navigator.of(context).pop();
+      } catch (e) {
+        if (mounted) {
+          setState(() => _isLoading = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text("Error: ${e.toString()}"),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  },
+)
+
+
+
                 ],
               ),
             ),
